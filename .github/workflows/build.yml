@@ -7,5 +7,5 @@ jobs:
     container:
       image: amazoncorretto:21
     steps:
-      - chmod +x gradlew
-      - ./gradlew clean build
+      - run: chmod +x gradlew
+      - run: ./gradlew clean build
