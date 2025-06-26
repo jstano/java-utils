@@ -1,16 +1,13 @@
 name: java-utils
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is building java-utils 🚀
 on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: amazoncorretto:21
+      image: azul/zulu-openjdk:21-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-#      - name: List files in the repository
-#        run: |
-#          ls ${{ github.workspace }}
       - run: chmod +x gradlew
       - run: ./gradlew clean build
