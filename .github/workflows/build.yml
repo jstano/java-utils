@@ -9,5 +9,7 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - run: chmod +x gradlew
-      - run: ./gradlew clean build
+      - name: Build code
+        run: |
+          chmod +x gradlew
+          ./gradlew clean build publish

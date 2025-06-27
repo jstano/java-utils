@@ -34,23 +34,25 @@ dependencies {
   testImplementation(files("src/test/resources/test-jarjar.jar"))
 }
 
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
 publishing {
   publications {
     create<MavenPublication>("mavenJava") {
       from(components["java"])
-
       pom {
-        name.set("Schema Model")
-        description.set("A virtual model for relational database schemas.")
-        url.set("https://github.com/jstano/java-schema")
-
+        name.set("java-utils")
+        description.set("A set of utility classes for Java applications")
+        url.set("https://github.com/jstano/java-utils")
         licenses {
           license {
-            name.set("The MIT License")
+            name.set("MIT License")
             url.set("https://opensource.org/license/mit")
           }
         }
-
         developers {
           developer {
             id.set("jstano")
@@ -58,27 +60,17 @@ publishing {
             email.set("jeff@stano.com")
           }
         }
-
         scm {
-          connection.set("scm:git:https://github.com/jstano/java-schema.git")
-          developerConnection.set("scm:git:ssh://git@github.com:jstano/java-schema.git")
-          url.set("https://github.com/jstano/java-schema")
+          connection.set("scm:git:https://github.com/jstano/java-utils.git")
+          developerConnection.set("scm:git:ssh://git@github.com:jstano/java-utils.git")
+          url.set("https://github.com/jstano/java-utils")
         }
       }
     }
   }
-
   repositories {
     maven {
-      name = "sonatype"
-      val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-      val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-      url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
-      credentials {
-        username = findProperty("ossrhUsername") as String?
-        password = findProperty("ossrhPassword") as String?
-      }
+      url = uri(layout.buildDirectory.dir("staging-deploy").get().toString())
     }
   }
 }
@@ -105,6 +97,14 @@ sonar {
   }
 }
 
+tasks.register<Zip>("zipStagingDeploy") {
+  archiveFileName.set("staging-deploy.zip")
+  destinationDirectory.set(layout.buildDirectory.dir("tmp"))
+  from("build/staging-deploy") {
+    include("**/*")
+  }
+}
+
 configurations {
   all {
     exclude(group = "commons-logging", module = "commons-logging")
@@ -121,11 +121,6 @@ tasks.withType<GroovyCompile>().configureEach {
   sourceCompatibility = "21"
   targetCompatibility = "21"
   groovyOptions.setParameters(true)
-}
-
-java {
-  withJavadocJar()
-  withSourcesJar()
 }
 
 tasks.withType<Jar> {
