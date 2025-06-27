@@ -76,11 +76,13 @@ publishing {
 }
 
 signing {
-  useInMemoryPgpKeys(
-    findProperty("signing.keyId") as String?,
-    findProperty("signing.key") as String?,
-    findProperty("signing.password") as String?
-  )
+//  val signingKeyFile = findProperty("signing.keyFile")?.let { file(it.toString()) }
+//  useInMemoryPgpKeys(
+//    findProperty("signing.keyId") as String?,
+//    signingKeyFile?.readText(),
+//    findProperty("signing.password") as String?
+//
+//  )
   sign(publishing.publications["mavenJava"])
 }
 
