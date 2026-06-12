@@ -5,25 +5,20 @@ plugins {
   id("org.sonarqube") version "6.2.0.5505"
   id("maven-publish")
   id("signing")
+  id("com.diffplug.spotless") version "6.25.0"
 }
 
 dependencies {
-  implementation("com.h2database:h2:2.3.232")
-  implementation("com.microsoft.sqlserver:mssql-jdbc:12.10.1.jre11")
   implementation("commons-cli:commons-cli:1.9.0")
   implementation("commons-io:commons-io:2.19.0")
-  implementation("io.opentelemetry.instrumentation:opentelemetry-jdbc:2.16.0-alpha")
-  implementation("mysql:mysql-connector-java:8.0.33")
   implementation("org.apache.commons:commons-collections4:4.5.0")
-  implementation("org.apache.commons:commons-dbcp2:2.13.0")
   implementation("org.apache.commons:commons-lang3:3.17.0")
-  implementation("org.apache.groovy:groovy-all:4.0.27")
-  implementation("org.hsqldb:hsqldb:2.7.4")
   implementation("org.jooq:joor-java-8:0.9.15")
-  implementation("org.postgresql:postgresql:42.7.7")
+  implementation("org.objenesis:objenesis:3.4")
   implementation("org.slf4j:slf4j-api:2.0.17")
 
   testImplementation("net.bytebuddy:byte-buddy:1.17.6")
+  testImplementation("org.apache.groovy:groovy-all:4.0.27")
   testImplementation("org.junit.jupiter:junit-jupiter:5.13.2")
   testImplementation("org.junit.platform:junit-platform-launcher:1.13.2")
   testImplementation("org.mockito:mockito-junit-jupiter:5.18.0")
@@ -88,7 +83,7 @@ signing {
 
 sonar {
   val sonarHost = "http://localhost:9000"
-  val sonarToken = "sqa_85bebeecde7b7f43bbbcdf9e9f6d57e1f7c5fabd"
+  val sonarToken = "sqa_010b94573806de8eaf377006538b63f2b1ebba40"
 
   properties {
     property("sonar.host.url", sonarHost)
@@ -96,6 +91,19 @@ sonar {
     property("sonar.projectName", "java-utils")
     property("sonar.projectKey", "${project.group}:java-utils")
     property("sonar.projectVersion", project.version)
+  }
+}
+
+spotless {
+  java {
+    googleJavaFormat("1.25.2").aosp()
+    importOrder()
+    removeUnusedImports()
+  }
+
+  groovy {
+    greclipse()
+    indentWithSpaces(2)
   }
 }
 
